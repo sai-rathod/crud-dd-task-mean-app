@@ -1,6 +1,7 @@
 services:
   mongodb:
     image: mongo:latest
+    pull_policy: always
     container_name: crud-mongodb
     volumes:
       - mongodb_data:/data/db
@@ -11,6 +12,7 @@ services:
 
   backend:
     image: sairathod/crud-dd-task-backend:latest
+    pull_policy: always
     container_name: crud-backend
     ports:
     - "8081:8081"
@@ -21,6 +23,7 @@ services:
 
   frontend:
     image: sairathod/crud-dd-task-frontend:latest
+    pull_policy: always
     container_name: crud-frontend
     ports:
     - "80:80"
