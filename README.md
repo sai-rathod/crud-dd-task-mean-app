@@ -1,27 +1,151 @@
-In this DevOps task, you need to build and deploy a full-stack CRUD application using the MEAN stack (MongoDB, Express, Angular 15, and Node.js). The backend will be developed with Node.js and Express to provide REST APIs, connecting to a MongoDB database. The frontend will be an Angular application utilizing HTTPClient for communication.  
+# CRUD Application - MEAN Stack
 
-The application will manage a collection of tutorials, where each tutorial includes an ID, title, description, and published status. Users will be able to create, retrieve, update, and delete tutorials. Additionally, a search box will allow users to find tutorials by title.
+A full-stack CRUD application built with MongoDB, Express.js, Angular, and Node.js (MEAN stack), featuring automated CI/CD pipeline with Jenkins and containerized deployment using Docker.
 
-## Project setup
+## 🏗️ Architecture
 
-### Node.js Server
+- **Frontend**: Angular application served via Nginx (port 80)
+- **Backend**: Node.js/Express.js REST API (port 8081, listening on 0.0.0.0)
+- **Database**: MongoDB
+- **CI/CD**: Jenkins pipeline with SonarQube analysis
+- **Deployment**: Docker Compose orchestration
 
+---
+
+## 📋 Prerequisites
+
+- Docker and Docker Compose installed
+- Jenkins (for CI/CD pipeline)
+- SonarQube (for code quality analysis)
+- SSH access (for EC2 deployment)
+- Docker Hub account
+
+---
+
+## 🚀 Local Deployment
+
+### Step 1: Configure Frontend Service URL
+
+Before deploying locally, update the API endpoint in the frontend:
+
+**File**: `frontend/src/app/services/tutorial.service.ts`
+
+Change the hardcoded EC2 IP to your local backend URL:
+```typescript
+// Change from EC2 IP to localhost
+baseUrl = 'http://localhost:8081/api';
+```
+
+### Step 2: Build and Push Docker Images
+
+Build and push both frontend and backend images to Docker Hub:
+
+```bash
+# Build and push backend
 cd backend
+docker build -t your-dockerhub-username/crud-dd-task-backend:latest .
+docker push your-dockerhub-username/crud-dd-task-backend:latest
 
-npm install
+# Build and push frontend
+cd ../frontend
+docker build -t your-dockerhub-username/crud-dd-task-frontend:latest .
+docker push your-dockerhub-username/crud-dd-task-frontend:latest
+```
 
-You can update the MongoDB credentials by modifying the `db.config.js` file located in `app/config/`.
+### Step 3: Update Docker Compose File
 
-Run `node server.js`
+Update image names in `docker-compose.yml` to match your Docker Hub username.
 
-### Angular Client
+### Step 4: Deploy Application
 
-cd frontend
+```bash
+docker-compose up -d
+```
 
-npm install
+Access the application at `http://localhost`
 
-Run `ng serve --port 8081`
+---
 
-You can modify the `src/app/services/tutorial.service.ts` file to adjust how the frontend interacts with the backend.
+## ☁️ EC2 Deployment
 
-Navigate to `http://localhost:8081/`
+### Step 1: Configure Frontend for EC2
+
+Update the API endpoint in `frontend/src/app/services/tutorial.service.ts` with your EC2 instance IP:
+```typescript
+baseUrl = 'http://YOUR_EC2_IP:8081/api';
+```
+
+### Step 2: Configure Jenkins Pipeline
+
+Update the following in your `Jenkinsfile`:
+- Docker Hub credentials
+- EC2 instance IP address
+- SSH credentials ID
+- SonarQube configuration
+
+### Step 3: Run Jenkins Pipeline
+
+The Jenkins pipeline will automatically:
+1. Clone the repository
+2. Run SonarQube analysis
+3. Build Docker images
+4. Push images to Docker Hub
+5. Deploy to EC2 via SSH
+
+---
+
+## 📸 Screenshots
+
+### Application UI
+![application-ui](https://github.com/user-attachments/assets/236687ff-3af6-4f34-9576-b7db208de3d9)
+
+---
+### Jenkins Pipeline
+![jenkins-pipeline](https://github.com/user-attachments/assets/35aaf72b-bbb8-4c32-8706-eb19fe1bc4da)
+
+---
+
+### SonarQube Results
+![sonarqube-result](https://github.com/user-attachments/assets/8a0bbfaa-aa09-469f-97d3-a6350bd9665a)
+
+---
+
+### AWS Console
+![aws-account](https://github.com/user-attachments/assets/d66f4f86-aa46-4ee7-983f-6c08b48c3b14)
+
+---
+
+## 🔧 Services Configuration
+
+| Service  | Port | Container Name    |
+|----------|------|-------------------|
+| Frontend | 80   | crud-frontend     |
+| Backend  | 8081 | crud-backend      |
+| MongoDB  | 27017| crud-mongodb      |
+
+---
+
+## 🐳 Docker Compose Overview
+
+The application uses a bridge network (`crud-network`) to enable communication between services. MongoDB data persists in a named volume (`mongodb_data`).
+
+---
+
+## 🛠️ Troubleshooting
+
+**Issue**: Application not accessible after deployment
+- Verify all containers are running: `docker ps`
+- Check container logs: `docker logs <container-name>`
+- Ensure security groups allow traffic on ports 80, 8081, and 27017
+
+**Issue**: Frontend cannot connect to backend
+- Verify the API URL in `tutorial.service.ts` matches your deployment environment
+- Check backend container is running and healthy
+
+---
+
+## 👤 Author
+
+**Sai Rathod**
+- Docker Hub: [sairathod](https://hub.docker.com/u/sairathod)
+- GitHub: [sai-rathod](https://github.com/sai-rathod)
