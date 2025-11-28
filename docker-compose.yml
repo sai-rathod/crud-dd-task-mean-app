@@ -4,21 +4,32 @@ services:
     container_name: crud-mongodb
     volumes:
       - mongodb_data:/data/db
-    network_mode: host
+    ports:
+    - "27017:27017"
+    networks:
+    - crud-network
 
   backend:
     image: sairathod/crud-dd-task-backend:latest
     container_name: crud-backend
+    ports:
+    - "8081:8081"
     depends_on:
       - mongodb
-    network_mode: host
+    networks:
+    - crud-network
 
   frontend:
     image: sairathod/crud-dd-task-frontend:latest
     container_name: crud-frontend
+    ports:
+    - "80:80"
     depends_on:
       - backend
-    network_mode: host
+    networks:
+    - crud-network
 
 volumes:
   mongodb_data:
+networks:
+  crud-network:
