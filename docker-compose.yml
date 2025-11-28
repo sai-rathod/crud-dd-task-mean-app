@@ -1,0 +1,24 @@
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: crud-mongodb
+    volumes:
+      - mongodb_data:/data/db
+    network_mode: host
+
+  backend:
+    image: sairathod/crud-dd-task-backend:latest
+    container_name: crud-backend
+    depends_on:
+      - mongodb
+    network_mode: host
+
+  frontend:
+    image: sairathod/crud-dd-task-frontend:latest
+    container_name: crud-frontend
+    depends_on:
+      - backend
+    network_mode: host
+
+volumes:
+  mongodb_data:
