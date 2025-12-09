@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Tutorial } from '../models/tutorial.model';
 
-const baseUrl = 'http://15.207.89.48:8081/api/tutorials';
+const baseUrl = 'http://65.0.7.230:8081/api/tutorials';
 
 @Injectable({
   providedIn: 'root'
