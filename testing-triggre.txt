@@ -1,1 +1,2 @@
 added a line to test automatic trigger
+added second line to trigger the pipeline
