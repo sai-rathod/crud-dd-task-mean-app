@@ -156,7 +156,7 @@ pipeline{
             steps {
                 sshagent(['assignment-project']) {
                     sh '''
-                        ssh -o StrictHostKeyChecking=no ubuntu@13.203.207.188 "
+                        ssh -o StrictHostKeyChecking=no ubuntu@15.207.89.48 "
                             cd /home/ubuntu
                             git clone https://github.com/sai-rathod/crud-dd-task-mean-app.git || echo 'repo is already present'
                             cd /home/ubuntu/crud-dd-task-mean-app
